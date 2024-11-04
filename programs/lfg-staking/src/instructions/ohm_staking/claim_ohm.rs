@@ -8,6 +8,6 @@ pub struct ClaimOhm<'info>{
     pub user: Signer<'info>
 }
 
-pub fn claim_ohm(ctx: Context<ClaimOhm>) -> Result<()>{
+pub fn claim_ohm(ctx: Context<ClaimOhm>, amount: u64) -> Result<()>{
     Ok(())
 }
