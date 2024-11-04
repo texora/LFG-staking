@@ -1,4 +1,10 @@
+pub mod instructions;
+pub mod errors;
+pub mod constants;
+
 use anchor_lang::prelude::*;
+
+use instructions::*;
 
 declare_id!("HmXTaac3Cw3xvpfnkMC1nra8QZ1pA2W4c5PQ8HyozHKx");
 
@@ -6,11 +12,9 @@ declare_id!("HmXTaac3Cw3xvpfnkMC1nra8QZ1pA2W4c5PQ8HyozHKx");
 pub mod ohm_fork_defi_staking {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
-        Ok(())
+    // ohm token staking initialize
+    pub fn Ohm_fork_initialize(ctx: Context<OhmInitialize>) -> Result<()> {
+        msg!("Ohm token staking initialize");
+        instructions::ohm_initialize(ctx)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
