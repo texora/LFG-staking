@@ -9,5 +9,6 @@ pub struct ClaimOhm<'info>{
 }
 
 pub fn claim_ohm(ctx: Context<ClaimOhm>, amount: u64) -> Result<()>{
+    
     Ok(())
 }
