@@ -1,12 +1,12 @@
 [package]
-name = "ohm-fork-defi-staking"
+name = "lfg-stakingg"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "ohm_fork_defi_staking"
+name = "lfg_staking"
 
 [features]
 default = []
