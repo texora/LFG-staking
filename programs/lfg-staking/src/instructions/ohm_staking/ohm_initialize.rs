@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, Mint, TokenAccount, Transfer};
 
 use crate::errors::ErrorCode;
-use crate::{OHM_FORK_MINT_ADDRESS};
+use crate::{ADMIN, OHM_FORK_MINT_ADDRESS};
 
 #[derive(Accounts)]
 pub struct OhmInitialize<'info>{
@@ -32,7 +32,10 @@ pub struct OhmInitialize<'info>{
     )]
     staking_token_mint: Account<'info, Mint>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        address=ADMIN.parse::<Pubkey>().unwrap() @ ErrorCode::InvalidOwner
+    )]
     admin: Signer<'info>,
 
     system_program: Program<'info, System>,
