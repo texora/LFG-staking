@@ -9,19 +9,19 @@ pub struct StakeOhm<'info>{
     /// CHECK
     #[account(
         mut,
-        seeds=[b"token_vault_pda_owner"],
+        seeds=[b"staking_pda"],
         bump
     )]
-    staking_owner: AccountInfo<'info>,
+    staking_pda: AccountInfo<'info>,
 
     #[account(
         mut,
-        seeds=[b"token_vault_pda_account"],
+        seeds=[b"staking_pda_ata", staking_token_mint.key().as_ref()],
         token::mint=staking_token_mint,
-        token::authority=staking_owner,
+        token::authority=staking_pda,
         bump
     )]
-    staking_owner_account: Account<'info, TokenAccount>,
+    staking_pda_account: Account<'info, TokenAccount>,
 
     #[account(
         mut,
@@ -67,7 +67,7 @@ pub fn stake_ohm(ctx: Context<StakeOhm>, amount: u64) -> Result<()>{
 
     let cpi_accounts = Transfer {
         from: ctx.accounts.user_token_account.to_account_info(),
-        to: ctx.accounts.staking_owner_account.to_account_info(),
+        to: ctx.accounts.staking_pda_account.to_account_info(),
         authority: ctx.accounts.user.to_account_info()
     };
 
