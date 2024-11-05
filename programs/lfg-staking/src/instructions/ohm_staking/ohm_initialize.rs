@@ -19,7 +19,7 @@ pub struct OhmInitialize<'info>{
     #[account(
         init_if_needed,
         payer=admin,
-        seeds=[b"staking_pda_ata", staking_token_mint.key().as_ref()],
+        seeds=[b"staking_pda_ata", OHM_FORK_MINT_ADDRESS.as_bytes()],
         token::mint=staking_token_mint,
         token::authority=staking_pda,
         bump

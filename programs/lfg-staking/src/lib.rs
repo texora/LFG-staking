@@ -48,7 +48,7 @@ pub mod lfg_staking {
         instructions::stake_ohm(ctx, amount)
     }
 
-    /// Allow users claim reward based their staking amount
+    /// Allow users claim reward based their staking amount. (1% reward of day)
     /// 
     /// # Arguments
     ///
