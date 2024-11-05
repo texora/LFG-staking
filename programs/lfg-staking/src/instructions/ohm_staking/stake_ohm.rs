@@ -47,9 +47,9 @@ pub struct StakeOhm<'info>{
 
 #[account]
 pub struct UserInfo{
-    amount: u64,
-    reward: u64,
-    deposit_slot: u64,
+    pub amount: u64,
+    pub reward: u64,
+    pub deposit_slot: u64,
 }
 
 pub fn stake_ohm(ctx: Context<StakeOhm>, amount: u64) -> Result<()>{
