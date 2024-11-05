@@ -5,6 +5,7 @@ pub mod constants;
 use anchor_lang::prelude::*;
 
 use instructions::*;
+use constants::*;
 
 declare_id!("HmXTaac3Cw3xvpfnkMC1nra8QZ1pA2W4c5PQ8HyozHKx");
 
