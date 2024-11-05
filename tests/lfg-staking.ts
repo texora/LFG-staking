@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { OhmForkDefiStaking } from "../target/types/ohm_fork_defi_staking";
 
-describe("ohm-fork-defi-staking", () => {
+describe("lfg-staking", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 

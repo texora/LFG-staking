@@ -8,7 +8,6 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 pub struct OhmInitialize<'info>{
     #[account(mut)]
     pub admin: Signer<'info>
-    
 }
 
 pub fn ohm_initialize(ctx: Context<OhmInitialize>) -> Result<()>{
