@@ -6,5 +6,8 @@ pub enum ErrorCode{
     InvalidOwner,
 
     #[msg("Wrong amount")]
-    WrongAmount
+    WrongAmount,
+
+    #[msg("Not enough")]
+    NotEnough,
 }
