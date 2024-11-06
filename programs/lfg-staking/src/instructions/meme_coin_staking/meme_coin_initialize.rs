@@ -1,7 +1,9 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Mint, Transfer};
 
-use crate::{FWOG_MEME_COIN, BONK_MEME_COIN, POPCAT_MEME_COIN, REWARD_TOKEN_MINT_ADDRESS};
+use crate::{
+    ADMIN, FWOG_MEME_COIN, BONK_MEME_COIN, POPCAT_MEME_COIN, REWARD_TOKEN_MINT_ADDRESS
+};
 use crate::errors::ErrorCode;
 
 #[derive(Accounts)]
@@ -59,7 +61,10 @@ pub struct MemeCoinInitialize<'info>{
     )]
     reward_token_mint: Account<'info, Mint>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        address=ADMIN.parse::<Pubkey>().unwrap() @ ErrorCode::InvalidOwner
+    )]
     admin: Signer<'info>,
 
     system_program: Program<'info, System>,
