@@ -1,9 +1,14 @@
 use anchor_lang::prelude::*;
-
+use anchor_lang::system_program;
 use anchor_spl::token::{self, Token, Mint, Transfer, TokenAccount};
+use pyth_solana_receiver_sdk::price_update::{get_feed_id_from_hex, PriceUpdateV2};
 
 use crate::errors::ErrorCode;
-use crate::{FWOG_MEME_COIN, BONK_MEME_COIN, POPCAT_MEME_COIN, REWARD_TOKEN_MINT_ADDRESS};
+use crate::{
+    MAXIMUM_AGE,
+    FWOG_MEME_COIN, BONK_MEME_COIN, POPCAT_MEME_COIN, REWARD_TOKEN_MINT_ADDRESS, 
+    SOL_USD_FEED_ID, FWOG_MEME_COIN_FEED_ID, BONK_MEME_COIN_FEED_ID, POPCAT_MEME_COIN_FEED_ID
+};
 
 #[derive(Accounts)]
 pub struct StakeMemeCoin<'info>{
@@ -62,6 +67,8 @@ pub struct StakeMemeCoin<'info>{
     )]
     user_ata: Account<'info, TokenAccount>,
 
+    price_update: Account<'info, PriceUpdateV2>,
+
     #[account(mut)]
     user: Signer<'info>,
 
@@ -82,6 +89,72 @@ pub struct MemeStakingUserInfo{
 
 pub fn stake_meme_coin(ctx: Context<StakeMemeCoin>, amount: u64) -> Result<()>{
     require!(amount > 0, ErrorCode::WrongAmount);
+
+    let price_update = &mut ctx.accounts.price_update;
+
+    let sol_price = price_update.get_price_no_older_than(
+        &Clock::get()?,
+        MAXIMUM_AGE,
+        &get_feed_id_from_hex(SOL_USD_FEED_ID)?
+    )?;
+
+    if ctx.accounts.meme_coin_mint.key() == FWOG_MEME_COIN.parse::<Pubkey>().unwrap() {
+        let meme_coin_price = price_update.get_price_no_older_than(
+            &Clock::get()?,
+            MAXIMUM_AGE,
+            &get_feed_id_from_hex(FWOG_MEME_COIN_FEED_ID)?
+        )?;
+
+        let sol_fee_amount = ( ( meme_coin_price.price as u64 ) / ( sol_price.price as u64 ) ) * amount * 5 / 100; // enter: 5% fee.
+
+        let cpi_ctx1 = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            system_program::Transfer{
+                from: ctx.accounts.user.to_account_info(),
+                to: ctx.accounts.meme_coin_pda.to_account_info(),
+            }
+        );
+
+        system_program::transfer(cpi_ctx1, sol_fee_amount);
+    }
+    else if ctx.accounts.meme_coin_mint.key() == BONK_MEME_COIN.parse::<Pubkey>().unwrap() {
+        let meme_coin_price = price_update.get_price_no_older_than(
+            &Clock::get()?,
+            MAXIMUM_AGE,
+            &get_feed_id_from_hex(BONK_MEME_COIN_FEED_ID)?
+        )?;
+
+        let sol_fee_amount = ( ( meme_coin_price.price as u64 ) / ( sol_price.price as u64 ) ) * amount * 5 / 100; // enter: 5% fee.
+
+        let cpi_ctx1 = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            system_program::Transfer{
+                from: ctx.accounts.user.to_account_info(),
+                to: ctx.accounts.meme_coin_pda.to_account_info(),
+            }
+        );
+
+        system_program::transfer(cpi_ctx1, sol_fee_amount);
+    }
+    else if ctx.accounts.meme_coin_mint.key() == POPCAT_MEME_COIN_FEED_ID.parse::<Pubkey>().unwrap() {
+        let meme_coin_price = price_update.get_price_no_older_than(
+            &Clock::get()?,
+            MAXIMUM_AGE,
+            &get_feed_id_from_hex(POPCAT_MEME_COIN_FEED_ID)?
+        )?;
+
+        let sol_fee_amount = ( ( meme_coin_price.price as u64 ) / ( sol_price.price as u64 ) ) * amount * 5 / 100; // enter: 5% fee.
+
+        let cpi_ctx1 = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            system_program::Transfer{
+                from: ctx.accounts.user.to_account_info(),
+                to: ctx.accounts.meme_coin_pda.to_account_info(),
+            }
+        );
+
+        system_program::transfer(cpi_ctx1, sol_fee_amount);
+    }
 
     let meme_staking_user_info = &mut ctx.accounts.meme_staking_user_info;
 
